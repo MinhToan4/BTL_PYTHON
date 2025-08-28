@@ -1,2 +1,0 @@
-# BTL_PYTHON
-BTL_PYTHON lớp tài năng CT PTIT 🤡
