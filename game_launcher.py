@@ -356,7 +356,10 @@ Kho game này sử dụng công nghệ MediaPipe để nhận diện cử chỉ 
         
         guide_text.setPlainText(guide_content)
         layout.addWidget(guide_text)
-        
+
+
+
+    #    jauì sfhua shfuihsf sfuhsi
     def launch_flappy_bird(self, mode):
         """Khởi chạy game Flappy Bird"""
         try:
