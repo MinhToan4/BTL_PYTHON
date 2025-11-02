@@ -361,7 +361,7 @@ Kho game này sử dụng công nghệ MediaPipe để nhận diện cử chỉ 
         """Khởi chạy game Flappy Bird"""
         try:
             # Kiểm tra file game có tồn tại không
-            game_path = "flappy-mediapipe/main.py"
+            game_path = "flappy-mediapipe/game_core.py"
             if not os.path.exists(game_path):
                 QMessageBox.warning(self, "Lỗi", 
                                   f"Không tìm thấy file game: {game_path}")
