@@ -6,6 +6,8 @@ import numpy as np
 import json  # Để lưu high scores JSON
 import os
 
+BASE_DIR = os.path.dirname(__file__)
+
 from pygame.locals import * # Basic pygame imports
 
 # Try to import real MediaPipe wrapper; fallback to mock
@@ -869,39 +871,39 @@ if __name__ == "__main__":
     # This will be the main point from where our game will start
     pygame.init() # Initialize all pygame's modules
     FPSCLOCK = pygame.time.Clock()
-    pygame.display.set_caption('Flappy Bird by CodeWithHarry')
+    pygame.display.set_caption('Flappy Bird')
 
     load_high_scores()
 
     GAME_SPRITES['numbers'] = (
-        pygame.image.load(r'gallery\sprites\0.png').convert_alpha(),
-        pygame.image.load(r'gallery\sprites\1.png').convert_alpha(),
-        pygame.image.load(r'gallery\sprites\2.png').convert_alpha(),
-        pygame.image.load(r'gallery\sprites\3.png').convert_alpha(),
-        pygame.image.load(r'gallery\sprites\4.png').convert_alpha(),
-        pygame.image.load(r'gallery\sprites\5.png').convert_alpha(),
-        pygame.image.load(r'gallery\sprites\6.png').convert_alpha(),
-        pygame.image.load(r'gallery\sprites\7.png').convert_alpha(),
-        pygame.image.load(r'gallery\sprites\8.png').convert_alpha(),
-        pygame.image.load(r'gallery\sprites\9.png').convert_alpha(),
+        pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', '0.png')).convert_alpha(),
+        pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', '1.png')).convert_alpha(),
+        pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', '2.png')).convert_alpha(),
+        pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', '3.png')).convert_alpha(),
+        pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', '4.png')).convert_alpha(),
+        pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', '5.png')).convert_alpha(),
+        pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', '6.png')).convert_alpha(),
+        pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', '7.png')).convert_alpha(),
+        pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', '8.png')).convert_alpha(),
+        pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', '9.png')).convert_alpha(),
     )
 
-    GAME_SPRITES['message'] =pygame.image.load(r'gallery\sprites\message.png').convert_alpha()
+    GAME_SPRITES['message'] = pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', 'message.png')).convert_alpha()
     
-    GAME_SPRITES['base'] = scale_image(pygame.image.load(r'gallery\sprites\base.png').convert_alpha(), SCALE_FACTOR)
+    GAME_SPRITES['base'] = scale_image(pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', 'base.png')).convert_alpha(), SCALE_FACTOR)
     GAME_SPRITES['pipe'] = (
-        scale_image(pygame.transform.rotate(pygame.image.load(PIPE).convert_alpha(), 180), SCALE_FACTOR),
-        scale_image(pygame.image.load(PIPE).convert_alpha(), SCALE_FACTOR)
+        scale_image(pygame.transform.rotate(pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', 'pipe.png')).convert_alpha(), 180), SCALE_FACTOR),
+        scale_image(pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', 'pipe.png')).convert_alpha(), SCALE_FACTOR)
     )
     # Game sounds
-    GAME_SOUNDS['die'] = pygame.mixer.Sound(r'gallery\audio\die.wav')
-    GAME_SOUNDS['hit'] = pygame.mixer.Sound(r'gallery\audio\hit.wav')
-    GAME_SOUNDS['point'] = pygame.mixer.Sound(r'gallery\audio\point.wav')
-    GAME_SOUNDS['swoosh'] = pygame.mixer.Sound(r'gallery\audio\swoosh.wav')
-    GAME_SOUNDS['wing'] = pygame.mixer.Sound(r'gallery\audio\wing.wav')
+    GAME_SOUNDS['die'] = pygame.mixer.Sound(os.path.join(BASE_DIR, 'gallery', 'audio', 'die.wav'))
+    GAME_SOUNDS['hit'] = pygame.mixer.Sound(os.path.join(BASE_DIR, 'gallery', 'audio', 'hit.wav'))
+    GAME_SOUNDS['point'] = pygame.mixer.Sound(os.path.join(BASE_DIR, 'gallery', 'audio', 'point.wav'))
+    GAME_SOUNDS['swoosh'] = pygame.mixer.Sound(os.path.join(BASE_DIR, 'gallery', 'audio', 'swoosh.wav'))
+    GAME_SOUNDS['wing'] = pygame.mixer.Sound(os.path.join(BASE_DIR, 'gallery', 'audio', 'wing.wav'))
 
-    GAME_SPRITES['background'] = scale_image(pygame.image.load(BACKGROUND).convert(), SCALE_FACTOR)
-    GAME_SPRITES['player'] = scale_image(pygame.image.load(PLAYER).convert_alpha(), SCALE_FACTOR)
+    GAME_SPRITES['background'] = scale_image(pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', 'background.png')).convert(), SCALE_FACTOR)
+    GAME_SPRITES['player'] = scale_image(pygame.image.load(os.path.join(BASE_DIR, 'gallery', 'sprites', 'bird.png')).convert_alpha(), SCALE_FACTOR)
     score_from_game = 0  # Biến tạm
 
     while True:
