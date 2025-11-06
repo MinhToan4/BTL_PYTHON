@@ -1,0 +1,9 @@
+# Race Master 3D Requirements
+ursina==4.1.1
+ursinanetworking==2.1.4
+mediapipe==0.10.14
+opencv-python==4.10.0.84
+pywin32==306
+
+# Optional - cho achievements
+# pillow

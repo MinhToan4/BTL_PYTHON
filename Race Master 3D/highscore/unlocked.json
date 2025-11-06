@@ -1,0 +1,89 @@
+{
+    "tracks": {
+        "sand_track": true,
+        "grass_track": true,
+        "snow_track": true,
+        "forest_track": true,
+        "savannah_track": true,
+        "lake_track": true
+    },
+    "beat_mandaw": {
+        "sand_track": true,
+        "grass_track": true,
+        "snow_track": true,
+        "forest_track": true,
+        "savannah_track": true,
+        "lake_track": true
+    },
+    "cars": {
+        "sports_car": true,
+        "muscle_car": true,
+        "limo": true,
+        "lorry": true,
+        "hatchback": true,
+        "rally_car": true
+    },
+    "textures": {
+        "sports_car": {
+            "red": true,
+            "blue": true,
+            "green": true,
+            "orange": true,
+            "black": true,
+            "white": true
+        },
+        "muscle_car": {
+            "red": true,
+            "blue": true,
+            "green": true,
+            "orange": true,
+            "black": true,
+            "white": true
+        },
+        "limo": {
+            "red": true,
+            "blue": true,
+            "green": true,
+            "orange": true,
+            "black": true,
+            "white": true
+        },
+        "lorry": {
+            "red": true,
+            "blue": true,
+            "green": true,
+            "orange": true,
+            "black": true,
+            "white": true
+        },
+        "hatchback": {
+            "red": true,
+            "blue": true,
+            "green": true,
+            "orange": true,
+            "black": true,
+            "white": true
+        },
+        "rally_car": {
+            "red": true,
+            "blue": true,
+            "green": true,
+            "orange": true,
+            "black": true,
+            "white": true
+        }
+    },
+    "cosmetics": {
+        "viking_helmet": true,
+        "duck": true,
+        "banana": true,
+        "surfinbird": true
+    },
+    "gamemodes": {
+        "drift": true
+    },
+    "settings": {
+        "controls": "wasd",
+        "flip_steering": true
+    }
+}
