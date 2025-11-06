@@ -9,15 +9,66 @@ import os
 import subprocess
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                              QHBoxLayout, QLabel, QPushButton, QFrame, QGridLayout,
-                             QMessageBox, QTabWidget, QTextEdit, QSlider, QCheckBox)
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer
-from PyQt6.QtGui import QFont, QPixmap, QPalette, QIcon
+                             QMessageBox, QTabWidget, QTextEdit, QSlider, QCheckBox,
+                             QScrollArea, QLineEdit)
+from PyQt6.QtCore import Qt, QThread, pyqtSignal
+from PyQt6.QtGui import QFont
+
+# Import AI config
+from ai_config import get_ai_model, get_fallback_response, SYSTEM_PROMPT
+
+class ChatThread(QThread):
+    """Thread để xử lý chat với AI không block UI"""
+    response_ready = pyqtSignal(str)
+    
+    def __init__(self, message, chat_history):
+        super().__init__()
+        self.message = message
+        self.chat_history = chat_history
+    
+    def run(self):
+        """Thử gọi AI với auto-switch: Flash → Pro → Fallback"""
+        model_index = 0  # Bắt đầu với Flash
+        
+        while model_index < 2:  # Thử tối đa 2 models
+            try:
+                # Lấy model theo index (0=Flash, 1=Pro)
+                model = get_ai_model(model_index)
+                
+                # Tạo full prompt
+                full_prompt = f"{SYSTEM_PROMPT}\n\nCâu hỏi: {self.message}\n\nTrả lời:"
+                
+                # Gửi request tới Gemini
+                response = model.generate_content(full_prompt)
+                ai_response = response.text
+                
+                print(f"✅ AI trả lời thành công!")
+                self.response_ready.emit(ai_response)
+                return  # Thành công, thoát
+                
+            except Exception as e:
+                error_msg = str(e).lower()
+                
+                # Kiểm tra lỗi giới hạn quota/rate limit
+                if any(keyword in error_msg for keyword in ['quota', 'limit', 'rate', '429', 'resource_exhausted']):
+                    print(f"⚠️ Model bị giới hạn, chuyển sang model dự phòng...")
+                    model_index += 1  # Chuyển sang model tiếp theo
+                    continue
+                else:
+                    # Lỗi khác, không retry
+                    print(f"⚠️ Gemini API lỗi: {str(e)[:100]}")
+                    break
+        
+        # Nếu tất cả models đều lỗi, dùng fallback
+        print("⚠️ Sử dụng fallback response")
+        response = get_fallback_response(self.message)
+        self.response_ready.emit(response)
 
 class GameLauncher(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Kho Game GestureAI - Điều Khiển Bằng Cử Chỉ Tay")
-        self.setGeometry(100, 100, 1000, 700)
+        self.setGeometry(100, 100, 1200, 800)
         self.setStyleSheet("""
             QMainWindow {
                 background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
@@ -53,8 +104,11 @@ class GameLauncher(QMainWindow):
             }
         """)
         
-        self.init_ui()
+        # Chat history
+        self.chat_history = []
         
+        self.init_ui()
+    
     def init_ui(self):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -103,12 +157,17 @@ class GameLauncher(QMainWindow):
         self.setup_games_tab(games_tab)
         tab_widget.addTab(games_tab, "🎯 Games")
         
-        # Tab 2: Cài đặt
+        # Tab 2: AI Chatbot
+        chatbot_tab = QWidget()
+        self.setup_chatbot_tab(chatbot_tab)
+        tab_widget.addTab(chatbot_tab, "🤖 AI Trợ Lý")
+        
+        # Tab 3: Cài đặt
         settings_tab = QWidget()
         self.setup_settings_tab(settings_tab)
         tab_widget.addTab(settings_tab, "⚙️ Cài đặt")
         
-        # Tab 3: Hướng dẫn
+        # Tab 4: Hướng dẫn
         guide_tab = QWidget()
         self.setup_guide_tab(guide_tab)
         tab_widget.addTab(guide_tab, "📖 Hướng dẫn")
@@ -116,7 +175,7 @@ class GameLauncher(QMainWindow):
         main_layout.addWidget(tab_widget)
         
         # Footer
-        footer_label = QLabel("MediaPipe Hand Tracking Games | Phát triển bởi Nhóm 3 thành viên")
+        footer_label = QLabel("MediaPipe Hand Tracking Games | Powered by AI")
         footer_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         footer_label.setStyleSheet("color: #95a5a6; margin: 10px;")
         main_layout.addWidget(footer_label)
@@ -149,29 +208,29 @@ class GameLauncher(QMainWindow):
         flappy_layout.addWidget(flappy_btn_one)
         flappy_layout.addWidget(flappy_btn_two)
         
-        # Game 2: Ninja (Placeholder)
-        ninja_frame = QFrame()
-        ninja_layout = QVBoxLayout(ninja_frame)
+        # Game 2: Race Master 3D
+        race_frame = QFrame()
+        race_layout = QVBoxLayout(race_frame)
         
-        ninja_title = QLabel("🥷 NINJA GAME")
-        ninja_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        ninja_title.setFont(QFont("Arial", 18, QFont.Weight.Bold))
-        ninja_title.setStyleSheet("color: #e74c3c; margin: 10px;")
+        race_title = QLabel("🏎️ RACE MASTER 3D")
+        race_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        race_title.setFont(QFont("Arial", 18, QFont.Weight.Bold))
+        race_title.setStyleSheet("color: #e74c3c; margin: 10px;")
         
-        ninja_desc = QLabel("Di chuyển ninja bằng cử chỉ tay, tấn công kẻ thù và vượt qua các thử thách")
-        ninja_desc.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        ninja_desc.setWordWrap(True)
-        ninja_desc.setStyleSheet("color: #ecf0f1; margin: 10px;")
+        race_desc = QLabel("Đua xe 3D với cử chỉ tay! Rẽ trái/phải, vượt đối thủ và chinh phục đường đua")
+        race_desc.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        race_desc.setWordWrap(True)
+        race_desc.setStyleSheet("color: #ecf0f1; margin: 10px;")
         
-        ninja_btn = QPushButton("🎮 Chơi")
-        ninja_btn.setEnabled(True)
-        ninja_btn.clicked.connect(self.launch_ninja_game)
+        race_btn = QPushButton("🎮 Chơi ngay")
+        race_btn.setEnabled(True)
+        race_btn.clicked.connect(self.launch_race_master)
         
-        ninja_layout.addWidget(ninja_title)
-        ninja_layout.addWidget(ninja_desc)
-        ninja_layout.addWidget(ninja_btn)
+        race_layout.addWidget(race_title)
+        race_layout.addWidget(race_desc)
+        race_layout.addWidget(race_btn)
         
-        # Game 3: Fruit Ninja (Placeholder)
+        # Game 3: Fruit Ninja
         fruit_frame = QFrame()
         fruit_layout = QVBoxLayout(fruit_frame)
         
@@ -185,7 +244,7 @@ class GameLauncher(QMainWindow):
         fruit_desc.setWordWrap(True)
         fruit_desc.setStyleSheet("color: #ecf0f1; margin: 10px;")
         
-        fruit_btn = QPushButton("🎮 Chơi")
+        fruit_btn = QPushButton("🎮 Chơi ngay")
         fruit_btn.setEnabled(True)
         fruit_btn.clicked.connect(self.launch_fruit_ninja)
         
@@ -195,9 +254,195 @@ class GameLauncher(QMainWindow):
         
         # Thêm các frame vào grid
         layout.addWidget(flappy_frame, 0, 0)
-        layout.addWidget(ninja_frame, 0, 1)
+        layout.addWidget(race_frame, 0, 1)
         layout.addWidget(fruit_frame, 1, 0, 1, 2)
         
+    def setup_chatbot_tab(self, tab):
+        """Thiết lập tab chatbot AI"""
+        layout = QVBoxLayout(tab)
+        
+        # Header
+        header_label = QLabel("🤖 AI Trợ Lý Game")
+        header_label.setFont(QFont("Arial", 16, QFont.Weight.Bold))
+        header_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        header_label.setStyleSheet("color: #3498db; margin: 10px;")
+        layout.addWidget(header_label)
+        
+        info_label = QLabel("Hỏi AI về game nào phù hợp với bạn, cách chơi, mẹo hay, hoặc so sánh game!")
+        info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        info_label.setWordWrap(True)
+        info_label.setStyleSheet("color: #ecf0f1; margin: 5px;")
+        layout.addWidget(info_label)
+        
+        # Chat display area
+        chat_scroll = QScrollArea()
+        chat_scroll.setWidgetResizable(True)
+        chat_scroll.setStyleSheet("""
+            QScrollArea {
+                background: rgba(255, 255, 255, 0.05);
+                border: 2px solid #34495e;
+                border-radius: 10px;
+            }
+        """)
+        
+        self.chat_display = QTextEdit()
+        self.chat_display.setReadOnly(True)
+        self.chat_display.setStyleSheet("""
+            QTextEdit {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                border: none;
+                padding: 15px;
+                font-size: 13px;
+                line-height: 1.6;
+            }
+        """)
+        self.chat_display.setPlainText("👋 Xin chào! Tôi là AI trợ lý game. Hãy hỏi tôi về các game nhé!\n\n💡 Gợi ý câu hỏi:\n• Game nào dễ chơi nhất?\n• Tôi thích đua xe, nên chơi game nào?\n• So sánh Flappy Bird và Chém Hoa Quả\n• Làm sao chơi Race Master 3D tốt hơn?\n• Cử chỉ tay để điều khiển game như thế nào?\n")
+        
+        chat_scroll.setWidget(self.chat_display)
+        layout.addWidget(chat_scroll)
+        
+        # Input area
+        input_layout = QHBoxLayout()
+        
+        self.chat_input = QLineEdit()
+        self.chat_input.setPlaceholderText("Nhập câu hỏi của bạn...")
+        self.chat_input.setStyleSheet("""
+            QLineEdit {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                border: 2px solid #34495e;
+                border-radius: 10px;
+                padding: 12px;
+                font-size: 14px;
+            }
+            QLineEdit:focus {
+                border: 2px solid #3498db;
+            }
+        """)
+        self.chat_input.returnPressed.connect(self.send_message)
+        
+        send_btn = QPushButton("📤 Gửi")
+        send_btn.clicked.connect(self.send_message)
+        send_btn.setStyleSheet("""
+            QPushButton {
+                background: #27ae60;
+                padding: 12px 25px;
+                font-size: 14px;
+                min-width: 100px;
+            }
+            QPushButton:hover {
+                background: #2ecc71;
+            }
+        """)
+        
+        clear_btn = QPushButton("🗑️ Xóa")
+        clear_btn.clicked.connect(self.clear_chat)
+        clear_btn.setStyleSheet("""
+            QPushButton {
+                background: #e74c3c;
+                padding: 12px 25px;
+                font-size: 14px;
+                min-width: 100px;
+            }
+            QPushButton:hover {
+                background: #c0392b;
+            }
+        """)
+        
+        input_layout.addWidget(self.chat_input)
+        input_layout.addWidget(send_btn)
+        input_layout.addWidget(clear_btn)
+        
+        layout.addLayout(input_layout)
+        
+        # Quick questions
+        quick_layout = QHBoxLayout()
+        quick_label = QLabel("⚡ Câu hỏi nhanh:")
+        quick_label.setStyleSheet("color: #ecf0f1; font-weight: bold;")
+        quick_layout.addWidget(quick_label)
+        
+        quick_questions = [
+            "Game nào dễ nhất?",
+            "Game đua xe là gì?",
+            "So sánh 3 game"
+        ]
+        
+        for question in quick_questions:
+            btn = QPushButton(question)
+            btn.clicked.connect(lambda checked, q=question: self.quick_ask(q))
+            btn.setStyleSheet("""
+                QPushButton {
+                    background: rgba(52, 152, 219, 0.3);
+                    padding: 8px 15px;
+                    font-size: 12px;
+                    border: 1px solid #3498db;
+                }
+                QPushButton:hover {
+                    background: rgba(52, 152, 219, 0.6);
+                }
+            """)
+            quick_layout.addWidget(btn)
+        
+        quick_layout.addStretch()
+        layout.addLayout(quick_layout)
+        
+    def launch_flappy_bird(self, mode):
+        """Khởi chạy game Flappy Bird"""
+        try:
+            # Kiểm tra file game có tồn tại không
+            game_path = "flappy-mediapipe/main.py"
+            if not os.path.exists(game_path):
+                QMessageBox.warning(self, "Lỗi", 
+                                  f"Không tìm thấy file game: {game_path}")
+                return
+                
+            # Khởi chạy game với mode được chọn
+            if mode == "one_hand":
+                os.environ["GAME_MODE"] = "one_hand"
+            else:
+                os.environ["GAME_MODE"] = "two_hands"
+                
+            subprocess.Popen([sys.executable, game_path])
+            
+            QMessageBox.information(self, "Thông báo", 
+                                  f"Đã khởi chạy Flappy Bird ở chế độ {mode}!")
+                                  
+        except Exception as e:
+            QMessageBox.critical(self, "Lỗi", f"Không thể khởi chạy game: {str(e)}")
+            
+    def launch_race_master(self):
+        """Khởi chạy game Race Master 3D"""
+        try:
+            # Kiểm tra file game có tồn tại không
+            game_path = "Race Master 3D/main.py"
+            if not os.path.exists(game_path):
+                QMessageBox.warning(self, "Lỗi", 
+                                  f"Không tìm thấy file game: {game_path}")
+                return
+                
+            subprocess.Popen([sys.executable, game_path])
+            QMessageBox.information(self, "Thông báo", "Đã khởi chạy Race Master 3D!")
+            
+        except Exception as e:
+            QMessageBox.critical(self, "Lỗi", f"Không thể khởi chạy game: {str(e)}")
+    
+    def launch_fruit_ninja(self):
+        """Khởi chạy game Fruit Ninja"""
+        try:
+            # Kiểm tra file game có tồn tại không
+            game_path = "fruit-ninja-mediapipe/main.py"
+            if not os.path.exists(game_path):
+                QMessageBox.warning(self, "Lỗi", 
+                                  f"Không tìm thấy file game: {game_path}")
+                return
+                
+            subprocess.Popen([sys.executable, game_path])
+            QMessageBox.information(self, "Thông báo", "Đã khởi chạy game Chém Hoa Quả!")
+            
+        except Exception as e:
+            QMessageBox.critical(self, "Lỗi", f"Không thể khởi chạy game: {str(e)}")
+            
     def setup_settings_tab(self, tab):
         layout = QVBoxLayout(tab)
         
@@ -320,10 +565,10 @@ Kho game này sử dụng công nghệ MediaPipe để nhận diện cử chỉ 
 • Chế độ 2 tay: Tay trái điều khiển bay lên, tay phải điều khiển bay xuống
 • Mục tiêu: Bay qua các ống mà không va chạm
 
-🥷 NINJA GAME:
-• Di chuyển tay trái/phải để ninja di chuyển
-• Cử chỉ đóng/mở bàn tay để nhảy
-• Vung tay để tấn công kẻ thù
+🏎️ RACE MASTER 3D:
+• Di chuyển tay trái/phải để xe rẽ trái/phải
+• Cử chỉ tăng/giảm tốc độ bằng cách mở/đóng bàn tay
+• Tránh va chạm với các xe khác và vượt qua chúng
 
 🍎 CHÉM HOA QUẢ:
 • Theo dõi ngón trỏ để tạo đường cắt
@@ -356,66 +601,60 @@ Kho game này sử dụng công nghệ MediaPipe để nhận diện cử chỉ 
         
         guide_text.setPlainText(guide_content)
         layout.addWidget(guide_text)
-
-
-
-    #    jauì sfhua Tính năng 2
-    def launch_flappy_bird(self, mode):
-        """Khởi chạy game Flappy Bird"""
-        try:
-            # Kiểm tra file game có tồn tại không
-            game_path = "flappy-mediapipe/main.py"
-            if not os.path.exists(game_path):
-                QMessageBox.warning(self, "Lỗi", 
-                                  f"Không tìm thấy file game: {game_path}")
-                return
-                
-            # Khởi chạy game với mode được chọn
-            if mode == "one_hand":
-                os.environ["GAME_MODE"] = "one_hand"
-            else:
-                os.environ["GAME_MODE"] = "two_hands"
-                
-            subprocess.Popen([sys.executable, game_path])
+        
+    def send_message(self):
+        """Gửi tin nhắn đến AI"""
+        message = self.chat_input.text().strip()
+        if not message:
+            return
             
-            QMessageBox.information(self, "Thông báo", 
-                                  f"Đã khởi chạy Flappy Bird ở chế độ {mode}!")
-                                  
-        except Exception as e:
-            QMessageBox.critical(self, "Lỗi", f"Không thể khởi chạy game: {str(e)}")
+        # Hiển thị tin nhắn người dùng
+        self.chat_display.append(f"\n👤 Bạn: {message}\n")
+        self.chat_input.clear()
+        
+        # Thêm vào lịch sử chat
+        self.chat_history.append({"role": "user", "content": message})
+        
+        # Hiển thị loading
+        self.chat_display.append("🤖 AI: Đang suy nghĩ...")
+        self.chat_display.verticalScrollBar().setValue(
+            self.chat_display.verticalScrollBar().maximum()
+        )
+        
+        # Gọi AI trong thread riêng
+        self.chat_thread = ChatThread(message, self.chat_history)
+        self.chat_thread.response_ready.connect(self.display_response)
+        self.chat_thread.start()
+        
+    def display_response(self, response):
+        """Hiển thị phản hồi từ AI"""
+        # Thêm vào lịch sử chat
+        if not response.startswith("❌"):
+            self.chat_history.append({"role": "assistant", "content": response})
+        
+        # Xóa dòng "Đang suy nghĩ..."
+        text = self.chat_display.toPlainText()
+        if "Đang suy nghĩ..." in text:
+            text = text.replace("🤖 AI: Đang suy nghĩ...", f"🤖 AI: {response}")
+            self.chat_display.setPlainText(text)
+        else:
+            self.chat_display.append(f"{response}")
             
-    def launch_ninja_game(self):
-        """Khởi chạy game Ninja"""
-        try:
-            # Kiểm tra file game có tồn tại không
-            game_path = "ninja-mediapipe/main.py"
-            if not os.path.exists(game_path):
-                QMessageBox.warning(self, "Lỗi", 
-                                  f"Không tìm thấy file game: {game_path}")
-                return
-                
-            subprocess.Popen([sys.executable, game_path])
-            QMessageBox.information(self, "Thông báo", "Đã khởi chạy game Ninja!")
-            
-        except Exception as e:
-            QMessageBox.critical(self, "Lỗi", f"Không thể khởi chạy game: {str(e)}")
-            
-    def launch_fruit_ninja(self):
-        """Khởi chạy game Fruit Ninja"""
-        try:
-            # Kiểm tra file game có tồn tại không
-            game_path = "fruit-ninja-mediapipe/main.py"
-            if not os.path.exists(game_path):
-                QMessageBox.warning(self, "Lỗi", 
-                                  f"Không tìm thấy file game: {game_path}")
-                return
-                
-            subprocess.Popen([sys.executable, game_path])
-            QMessageBox.information(self, "Thông báo", "Đã khởi chạy game Chém Hoa Quả!")
-            
-        except Exception as e:
-            QMessageBox.critical(self, "Lỗi", f"Không thể khởi chạy game: {str(e)}")
-            
+        self.chat_display.verticalScrollBar().setValue(
+            self.chat_display.verticalScrollBar().maximum()
+        )
+        
+    def quick_ask(self, question):
+        """Hỏi nhanh"""
+        self.chat_input.setText(question)
+        self.send_message()
+        
+    def clear_chat(self):
+        """Xóa lịch sử chat"""
+        self.chat_display.clear()
+        self.chat_display.setPlainText("👋 Xin chào! Tôi là AI trợ lý game. Hãy hỏi tôi về các game nhé!\n")
+        self.chat_history = []
+    
     def save_settings(self):
         """Lưu cài đặt"""
         settings = {
