@@ -68,51 +68,60 @@ class GameLauncher(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("🎮 Kho Game GestureAI - Điều Khiển Bằng Cử Chỉ Tay")
-        self.setGeometry(100, 100, 1012, 650)
+        
+        self.setFixedSize(1180, 1000)
+        
         self.setStyleSheet("""
             QMainWindow {
                 background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
-                                          stop: 0 #0f0c29, stop: 0.5 #302b63, stop: 1 #24243e);
+                                          stop: 0 #a8edea, stop: 0.3 #fed6e3, 
+                                          stop: 0.6 #c1e3ff, stop: 1 #f5efff);
             }
             QPushButton {
-                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                          stop: 0 #667eea, stop: 1 #764ba2);
-                border: none;
-                color: white;
-                padding: 11px 22px;
-                font-size: 11px;
+                background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                          stop: 0 rgba(255, 255, 255, 0.7),
+                                          stop: 1 rgba(255, 255, 255, 0.5));
+                border: 2px solid rgba(255, 255, 255, 0.8);
+                color: #1a1a1a;
+                padding: 12px 24px;
+                font-size: 12px;
                 font-weight: bold;
-                border-radius: 9px;
-                margin: 6px;
-                min-height: 32px;
+                border-radius: 15px;
+                margin: 8px;
+                min-height: 35px;
             }
             QPushButton:hover {
-                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                          stop: 0 #f093fb, stop: 1 #f5576c);
-                transform: translateY(-2px);
+                background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                          stop: 0 rgba(255, 255, 255, 0.9),
+                                          stop: 1 rgba(200, 230, 255, 0.8));
+                border: 2px solid rgba(100, 180, 255, 0.8);
+                color: #000000;
             }
             QPushButton:pressed {
-                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                          stop: 0 #4facfe, stop: 1 #00f2fe);
+                background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                          stop: 0 rgba(200, 230, 255, 0.8),
+                                          stop: 1 rgba(180, 220, 255, 0.9));
+                border: 2px solid rgba(80, 160, 255, 1);
+                color: #000000;
             }
             QLabel {
-                color: white;
+                color: #2c3e50;
                 font-weight: bold;
             }
             QFrame {
                 background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                          stop: 0 rgba(255, 255, 255, 0.15),
-                                          stop: 1 rgba(255, 255, 255, 0.08));
-                border: 2px solid rgba(255, 255, 255, 0.2);
-                border-radius: 14px;
-                margin: 11px;
-                padding: 11px;
+                                          stop: 0 rgba(255, 255, 255, 0.6),
+                                          stop: 1 rgba(255, 255, 255, 0.4));
+                border: 2px solid rgba(255, 255, 255, 0.8);
+                border-radius: 20px;
+                margin: 12px;
+                padding: 15px;
             }
             QFrame:hover {
                 background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                          stop: 0 rgba(255, 255, 255, 0.2),
-                                          stop: 1 rgba(255, 255, 255, 0.12));
-                border: 2px solid rgba(255, 255, 255, 0.35);
+                                          stop: 0 rgba(255, 255, 255, 0.75),
+                                          stop: 1 rgba(255, 255, 255, 0.55));
+                border: 2px solid rgba(255, 255, 255, 0.95);
             }
         """)
 
@@ -136,20 +145,19 @@ class GameLauncher(QMainWindow):
 
         title_label = QLabel("🎮 KHO GAME GESTURE AI 🎮")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title_label.setFont(QFont("Segoe UI", 23, QFont.Weight.Bold))
+        title_label.setFont(QFont("Segoe UI", 28, QFont.Weight.Bold))
         title_label.setStyleSheet("""
-            color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                                  stop: 0 #667eea, stop: 0.5 #f093fb, stop: 1 #f5576c);
+            color: #1a252f;
             margin: 11px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
         """)
         header_layout.addWidget(title_label)
 
         subtitle_label = QLabel("✨ Điều khiển game bằng cử chỉ tay - Không cần chuột, không cần bàn phím! ✨")
         subtitle_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        subtitle_label.setFont(QFont("Segoe UI", 9))
+        subtitle_label.setFont(QFont("Segoe UI", 12, QFont.Weight.Bold))
         subtitle_label.setStyleSheet("""
-            color: rgba(255, 255, 255, 0.9);
+            color: #34495e;
             margin-bottom: 8px;
             font-style: italic;
         """)
@@ -161,27 +169,33 @@ class GameLauncher(QMainWindow):
         tab_widget = QTabWidget()
         tab_widget.setStyleSheet("""
             QTabWidget::pane {
-                border: 2px solid rgba(255, 255, 255, 0.2);
-                background: rgba(0, 0, 0, 0.2);
-                border-radius: 11px;
-                padding: 3px;
+                border: 2px solid rgba(255, 255, 255, 0.5);
+                background: rgba(255, 255, 255, 0.25);
+                border-radius: 15px;
+                padding: 5px;
             }
             QTabBar::tab {
-                background: rgba(255, 255, 255, 0.1);
-                color: white;
-                padding: 9px 18px;
-                margin: 3px;
-                border-radius: 6px;
-                font-size: 10px;
+                background: rgba(255, 255, 255, 0.4);
+                color: #2c3e50;
+                padding: 10px 20px;
+                margin: 4px;
+                border-radius: 10px;
+                font-size: 13px;
                 font-weight: bold;
-                min-width: 87px;
+                min-width: 90px;
+                border: 2px solid rgba(255, 255, 255, 0.6);
             }
             QTabBar::tab:selected {
-                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                          stop: 0 #667eea, stop: 1 #764ba2);
+                background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                          stop: 0 rgba(255, 255, 255, 0.8),
+                                          stop: 1 rgba(200, 230, 255, 0.8));
+                border: 2px solid rgba(100, 180, 255, 0.8);
+                color: #1a252f;
             }
             QTabBar::tab:hover {
-                background: rgba(255, 255, 255, 0.2);
+                background: rgba(255, 255, 255, 0.6);
+                border: 2px solid rgba(150, 200, 255, 0.8);
+                color: #1a252f;
             }
         """)
 
@@ -208,12 +222,12 @@ class GameLauncher(QMainWindow):
         main_layout.addWidget(tab_widget)
 
         # Footer với animation effect
-        footer_label = QLabel("💫 MediaPipe Hand Tracking Games | Powered by Gemini AI 💫")
+        footer_label = QLabel("💫 MediaPipe Hand Tracking Games | Powered by AI 💫")
         footer_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        footer_label.setFont(QFont("Segoe UI", 11, QFont.Weight.Bold))
         footer_label.setStyleSheet("""
-            color: rgba(255, 255, 255, 0.6);
+            color: #34495e;
             margin: 9px;
-            font-size: 10px;
         """)
         main_layout.addWidget(footer_label)
 
@@ -225,9 +239,9 @@ class GameLauncher(QMainWindow):
         # Title cho game section
         section_title = QLabel("🎮 DANH SÁCH TRÒ CHƠI")
         section_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        section_title.setFont(QFont("Segoe UI", 14, QFont.Weight.Bold))
+        section_title.setFont(QFont("Segoe UI", 16, QFont.Weight.Bold))
         section_title.setStyleSheet("""
-            color: white;
+            color: #2c3e50;
             margin-bottom: 15px;
             padding: 8px;
             background: rgba(255, 255, 255, 0.1);
@@ -242,29 +256,62 @@ class GameLauncher(QMainWindow):
 
         # === Game 1: Flappy Bird ===
         flappy_frame = QFrame()
-        flappy_frame.setMinimumHeight(360)
-        flappy_frame.setMaximumHeight(360)
+        flappy_frame.setMinimumHeight(420)
+        flappy_frame.setMaximumHeight(420)
+        flappy_frame.setStyleSheet("""
+            QFrame {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #b8e0f6, stop: 1 #d4ecf7);
+                border: 3px solid #a8d5f2;
+                border-radius: 20px;
+                margin: 12px;
+                padding: 15px;
+            }
+            QFrame:hover {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #a0d4f2, stop: 1 #c0e5f7);
+                border: 3px solid #90c5e8;
+            }
+        """)
         flappy_layout = QVBoxLayout(flappy_frame)
         flappy_layout.setSpacing(12)
 
         flappy_title = QLabel("🐦 FLAPPY BIRD")
         flappy_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        flappy_title.setFont(QFont("Segoe UI", 14, QFont.Weight.Bold))
-        flappy_title.setStyleSheet("color: #FFD700; margin: 8px;")
+        flappy_title.setFont(QFont("Segoe UI", 16, QFont.Weight.Bold))
+        flappy_title.setStyleSheet("color: #2c5f7e; margin: 8px;")
 
         flappy_desc = QLabel("Điều khiển chú chim bay qua các ống bằng cử chỉ tay. Thử thách phản xạ và độ chính xác!")
         flappy_desc.setAlignment(Qt.AlignmentFlag.AlignCenter)
         flappy_desc.setWordWrap(True)
         flappy_desc.setStyleSheet("""
-            color: rgba(255, 255, 255, 0.9);
+            color: #2c5f7e;
             margin: 18px 10px;
-            font-size: 13px;
+            font-size: 15px;
             line-height: 1.8;
             padding: 12px;
+            min-height: 100px;
         """)
 
         flappy_btn = QPushButton("🎮 CHƠI NGAY")
-        flappy_btn.setMinimumHeight(37)
+        flappy_btn.setMinimumHeight(45)
+        flappy_btn.setFont(QFont("Segoe UI", 13, QFont.Weight.Bold))
+        flappy_btn.setStyleSheet("""
+            QPushButton {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #5ba3d0, stop: 1 #4a8db8);
+                color: white;
+                border: 2px solid #5ba3d0;
+                border-radius: 15px;
+                padding: 10px;
+            }
+            QPushButton:hover {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #4a8db8, stop: 1 #3977a0);
+                color: white;
+                border: 2px solid #3977a0;
+            }
+        """)
         flappy_btn.clicked.connect(lambda: self.launch_flappy_bird())
 
         flappy_layout.addWidget(flappy_title)
@@ -274,29 +321,62 @@ class GameLauncher(QMainWindow):
 
         # === Game 2: Ninja Fruit (Chém Hoa Quả) ===
         fruit_frame = QFrame()
-        fruit_frame.setMinimumHeight(360)
-        fruit_frame.setMaximumHeight(360)
+        fruit_frame.setMinimumHeight(420)
+        fruit_frame.setMaximumHeight(420)
+        fruit_frame.setStyleSheet("""
+            QFrame {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #ffd4e5, stop: 1 #ffe0ed);
+                border: 3px solid #ffc4da;
+                border-radius: 20px;
+                margin: 12px;
+                padding: 15px;
+            }
+            QFrame:hover {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #ffc0da, stop: 1 #ffd4e5);
+                border: 3px solid #ffb0cf;
+            }
+        """)
         fruit_layout = QVBoxLayout(fruit_frame)
         fruit_layout.setSpacing(12)
 
         fruit_title = QLabel("🍎 NINJA FRUIT")
         fruit_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        fruit_title.setFont(QFont("Segoe UI", 14, QFont.Weight.Bold))
-        fruit_title.setStyleSheet("color: #FF6347; margin: 8px;")
+        fruit_title.setFont(QFont("Segoe UI", 16, QFont.Weight.Bold))
+        fruit_title.setStyleSheet("color: #9e4a6e; margin: 8px;")
 
         fruit_desc = QLabel("Chém hoa quả bay lên bằng cách vung tay. Tránh chạm vào bom và ghi điểm cao nhất!")
         fruit_desc.setAlignment(Qt.AlignmentFlag.AlignCenter)
         fruit_desc.setWordWrap(True)
         fruit_desc.setStyleSheet("""
-            color: rgba(255, 255, 255, 0.9);
+            color: #9e4a6e;
             margin: 18px 10px;
-            font-size: 13px;
+            font-size: 15px;
             line-height: 1.8;
             padding: 12px;
+            min-height: 100px;
         """)
 
         fruit_btn = QPushButton("🎮 CHƠI NGAY")
-        fruit_btn.setMinimumHeight(37)
+        fruit_btn.setMinimumHeight(45)
+        fruit_btn.setFont(QFont("Segoe UI", 13, QFont.Weight.Bold))
+        fruit_btn.setStyleSheet("""
+            QPushButton {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #e88aaf, stop: 1 #d97a9f);
+                color: white;
+                border: 2px solid #e88aaf;
+                border-radius: 15px;
+                padding: 10px;
+            }
+            QPushButton:hover {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #d97a9f, stop: 1 #ca6a8f);
+                color: white;
+                border: 2px solid #ca6a8f;
+            }
+        """)
         fruit_btn.clicked.connect(self.launch_fruit_ninja)
 
         fruit_layout.addWidget(fruit_title)
@@ -306,29 +386,62 @@ class GameLauncher(QMainWindow):
 
         # === Game 3: Race Master 3D ===
         race_frame = QFrame()
-        race_frame.setMinimumHeight(360)
-        race_frame.setMaximumHeight(360)
+        race_frame.setMinimumHeight(420)
+        race_frame.setMaximumHeight(420)
+        race_frame.setStyleSheet("""
+            QFrame {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #dcd4f7, stop: 1 #ebe5fa);
+                border: 3px solid #ccc4ed;
+                border-radius: 20px;
+                margin: 12px;
+                padding: 15px;
+            }
+            QFrame:hover {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #ccc4ed, stop: 1 #dcd4f7);
+                border: 3px solid #bcb4dd;
+            }
+        """)
         race_layout = QVBoxLayout(race_frame)
         race_layout.setSpacing(12)
 
         race_title = QLabel("🏎️ RACE MASTER 3D")
         race_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        race_title.setFont(QFont("Segoe UI", 14, QFont.Weight.Bold))
-        race_title.setStyleSheet("color: #FF4500; margin: 8px;")
+        race_title.setFont(QFont("Segoe UI", 16, QFont.Weight.Bold))
+        race_title.setStyleSheet("color: #5a4a8e; margin: 8px;")
 
         race_desc = QLabel("Đua xe 3D với cử chỉ tay! Rẽ trái/phải, vượt đối thủ và chinh phục đường đua.")
         race_desc.setAlignment(Qt.AlignmentFlag.AlignCenter)
         race_desc.setWordWrap(True)
         race_desc.setStyleSheet("""
-            color: rgba(255, 255, 255, 0.9);
+            color: #5a4a8e;
             margin: 18px 10px;
-            font-size: 13px;
+            font-size: 15px;
             line-height: 1.8;
             padding: 12px;
+            min-height: 100px;
         """)
 
         race_btn = QPushButton("🎮 CHƠI NGAY")
-        race_btn.setMinimumHeight(37)
+        race_btn.setMinimumHeight(45)
+        race_btn.setFont(QFont("Segoe UI", 13, QFont.Weight.Bold))
+        race_btn.setStyleSheet("""
+            QPushButton {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #9b8ac8, stop: 1 #8a7ab8);
+                color: white;
+                border: 2px solid #9b8ac8;
+                border-radius: 15px;
+                padding: 10px;
+            }
+            QPushButton:hover {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                          stop: 0 #8a7ab8, stop: 1 #796aa8);
+                color: white;
+                border: 2px solid #796aa8;
+            }
+        """)
         race_btn.clicked.connect(self.launch_race_master)
 
         race_layout.addWidget(race_title)
@@ -357,14 +470,8 @@ class GameLauncher(QMainWindow):
         header_label = QLabel("🤖 AI Trợ Lý Game")
         header_label.setFont(QFont("Arial", 16, QFont.Weight.Bold))
         header_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        header_label.setStyleSheet("color: #3498db; margin: 10px;")
+        header_label.setStyleSheet("color: #2c3e50; margin: 10px;")
         layout.addWidget(header_label)
-
-        info_label = QLabel("Hỏi AI về game nào phù hợp với bạn, cách chơi, mẹo hay, hoặc so sánh game!")
-        info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        info_label.setWordWrap(True)
-        info_label.setStyleSheet("color: #ecf0f1; margin: 5px;")
-        layout.addWidget(info_label)
 
         # Chat display area
         chat_scroll = QScrollArea()
@@ -382,7 +489,7 @@ class GameLauncher(QMainWindow):
         self.chat_display.setStyleSheet("""
             QTextEdit {
                 background: rgba(255, 255, 255, 0.1);
-                color: white;
+                color: #2c3e50;
                 border: none;
                 padding: 15px;
                 font-size: 13px;
@@ -402,7 +509,7 @@ class GameLauncher(QMainWindow):
         self.chat_input.setStyleSheet("""
             QLineEdit {
                 background: rgba(255, 255, 255, 0.1);
-                color: white;
+                color: #2c3e50;
                 border: 2px solid #34495e;
                 border-radius: 10px;
                 padding: 12px;
@@ -419,12 +526,14 @@ class GameLauncher(QMainWindow):
         send_btn.setStyleSheet("""
             QPushButton {
                 background: #27ae60;
+                color: white;
                 padding: 12px 25px;
                 font-size: 14px;
                 min-width: 100px;
             }
             QPushButton:hover {
                 background: #2ecc71;
+                color: white;
             }
         """)
 
@@ -433,12 +542,14 @@ class GameLauncher(QMainWindow):
         clear_btn.setStyleSheet("""
             QPushButton {
                 background: #e74c3c;
+                color: white;
                 padding: 12px 25px;
                 font-size: 14px;
                 min-width: 100px;
             }
             QPushButton:hover {
                 background: #c0392b;
+                color: white;
             }
         """)
 
@@ -451,7 +562,7 @@ class GameLauncher(QMainWindow):
         # Quick questions
         quick_layout = QHBoxLayout()
         quick_label = QLabel("⚡ Câu hỏi nhanh:")
-        quick_label.setStyleSheet("color: #ecf0f1; font-weight: bold;")
+        quick_label.setStyleSheet("color: #2c3e50; font-weight: bold;")
         quick_layout.addWidget(quick_label)
 
         quick_questions = [
@@ -466,12 +577,14 @@ class GameLauncher(QMainWindow):
             btn.setStyleSheet("""
                 QPushButton {
                     background: rgba(52, 152, 219, 0.3);
+                    color: #2c3e50;
                     padding: 8px 15px;
                     font-size: 12px;
                     border: 1px solid #3498db;
                 }
                 QPushButton:hover {
                     background: rgba(52, 152, 219, 0.6);
+                    color: #1a252f;
                 }
             """)
             quick_layout.addWidget(btn)
@@ -541,14 +654,14 @@ class GameLauncher(QMainWindow):
 
         camera_title = QLabel("📹 Cài đặt Camera")
         camera_title.setFont(QFont("Arial", 16, QFont.Weight.Bold))
-        camera_title.setStyleSheet("color: #3498db; margin: 10px;")
+        camera_title.setStyleSheet("color: #2c3e50; margin: 10px;")
 
         self.camera_checkbox = QCheckBox("Bật camera để điều khiển")
         self.camera_checkbox.setChecked(True)
-        self.camera_checkbox.setStyleSheet("color: white; margin: 5px;")
+        self.camera_checkbox.setStyleSheet("color: #2c3e50; margin: 5px;")
 
         sensitivity_label = QLabel("Độ nhạy cử chỉ:")
-        sensitivity_label.setStyleSheet("color: white; margin: 5px;")
+        sensitivity_label.setStyleSheet("color: #2c3e50; margin: 5px;")
 
         self.sensitivity_slider = QSlider(Qt.Orientation.Horizontal)
         self.sensitivity_slider.setRange(1, 10)
@@ -577,14 +690,14 @@ class GameLauncher(QMainWindow):
 
         audio_title = QLabel("🔊 Cài đặt Âm thanh")
         audio_title.setFont(QFont("Arial", 16, QFont.Weight.Bold))
-        audio_title.setStyleSheet("color: #e74c3c; margin: 10px;")
+        audio_title.setStyleSheet("color: #2c3e50; margin: 10px;")
 
         self.audio_checkbox = QCheckBox("Bật âm thanh game")
         self.audio_checkbox.setChecked(True)
-        self.audio_checkbox.setStyleSheet("color: white; margin: 5px;")
+        self.audio_checkbox.setStyleSheet("color: #2c3e50; margin: 5px;")
 
         volume_label = QLabel("Âm lượng:")
-        volume_label.setStyleSheet("color: white; margin: 5px;")
+        volume_label.setStyleSheet("color: #2c3e50; margin: 5px;")
 
         self.volume_slider = QSlider(Qt.Orientation.Horizontal)
         self.volume_slider.setRange(0, 100)
@@ -613,12 +726,14 @@ class GameLauncher(QMainWindow):
         save_btn.setStyleSheet("""
             QPushButton {
                 background: #27ae60;
+                color: white;
                 padding: 15px;
                 font-size: 16px;
                 margin: 20px;
             }
             QPushButton:hover {
                 background: #2ecc71;
+                color: white;
             }
         """)
 
@@ -635,7 +750,7 @@ class GameLauncher(QMainWindow):
         guide_text.setStyleSheet("""
             QTextEdit {
                 background: rgba(255, 255, 255, 0.1);
-                color: white;
+                color: #2c3e50;
                 border: none;
                 padding: 15px;
                 font-size: 14px;
