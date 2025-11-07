@@ -483,15 +483,16 @@ class GameLauncher(QMainWindow):
         """Khởi chạy game Flappy Bird"""
         try:
             # Kiểm tra file game có tồn tại không
-            game_path = "flappy-mediapipe/game_core.py"
+            game_dir = "flappy-mediapipe"
+            game_path = os.path.join(game_dir, "game_core.py")
             if not os.path.exists(game_path):
                 QMessageBox.warning(self, "Lỗi",
                                   f"Không tìm thấy file game: {game_path}")
                 return
 
-            # Khởi chạy game với chế độ 2 tay mặc định
+            # Khởi chạy game với chế độ 2 tay mặc định và set working directory đúng
             os.environ["GAME_MODE"] = "two_hands"
-            subprocess.Popen([sys.executable, game_path])
+            subprocess.Popen([sys.executable, "game_core.py"], cwd=game_dir)
 
             QMessageBox.information(self, "Thông báo",
                                   "Đã khởi chạy Flappy Bird!")
