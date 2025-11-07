@@ -1,0 +1,50 @@
+[
+  {
+    "name": "dung",
+    "score": 2000,
+    "difficulty": "Hard",
+    "ts": 1762449107
+  },
+  {
+    "name": "viet",
+    "score": 1820,
+    "difficulty": "Normal",
+    "ts": 1762449273
+  },
+  {
+    "name": "hi3",
+    "score": 800,
+    "difficulty": "Hard",
+    "ts": 1762450085
+  },
+  {
+    "name": "hi1",
+    "score": 600,
+    "difficulty": "Normal",
+    "ts": 1762450001
+  },
+  {
+    "name": "hi2",
+    "score": 495,
+    "difficulty": "Easy",
+    "ts": 1762450041
+  },
+  {
+    "name": "viet",
+    "score": 300,
+    "difficulty": "Normal",
+    "ts": 1762446918
+  },
+  {
+    "name": "toan",
+    "score": 100,
+    "difficulty": "Normal",
+    "ts": 1762496608
+  },
+  {
+    "name": "hi",
+    "score": 85,
+    "difficulty": "Normal",
+    "ts": 1762447019
+  }
+]
