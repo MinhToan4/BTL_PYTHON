@@ -2,6 +2,7 @@
 
 import pygame
 import global_variables as gv
+import os
 
 SCALE_FACTOR = 1.5
 FPS = 32
@@ -23,7 +24,8 @@ DIFFICULTY_LEVELS = {
     'Medium': {'pipe_vel_x': -4, 'gap_offset': SCREENHEIGHT / 3},      # Mặc định
     'Hard': {'pipe_vel_x': -6, 'gap_offset': SCREENHEIGHT / 3 * 0.8}   # Nhanh, gap hẹp
 }
-HIGH_SCORES_FILE = 'highscores.json'
+# Sử dụng đường dẫn tuyệt đối dựa trên vị trí file này
+HIGH_SCORES_FILE = os.path.join(os.path.dirname(__file__), 'highscores.json')
 high_scores = []
 MAX_NAME_LENGTH = 10  # Giới hạn tên nhập
 # current_difficulty = os.environ.get('DIFFICULTY', 'Medium')
