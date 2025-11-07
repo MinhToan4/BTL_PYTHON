@@ -519,7 +519,7 @@ class GameLauncher(QMainWindow):
         """Khởi chạy game Fruit Ninja"""
         try:
             # Kiểm tra file game có tồn tại không
-            game_path = "fruit-ninja-mediapipe/main.py"
+            game_path = "ninja-mediapipe/main.py"
             if not os.path.exists(game_path):
                 QMessageBox.warning(self, "Lỗi",
                                   f"Không tìm thấy file game: {game_path}")

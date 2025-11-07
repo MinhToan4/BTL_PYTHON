@@ -111,28 +111,3 @@ class TrailRenderer(Entity):
             destroy(self.renderer)
         self.trailing = False
 
-# Class Smoke đã bị comment - có thể để phát triển sau
-# class Smoke(Entity):
-#     def __init__(self, position, rotation_y, amount_of_smoke):
-#         super().__init__(
-#             model = "smoke.obj",
-#             texture = "smoke.png", 
-#             scale = 3,
-#             position = position,
-#             rotation_y = rotation_y,
-#         )
-
-#         self.amount_of_smoke = amount_of_smoke
-#         if self.amount_of_smoke >= 0.1:
-#             self.amount_of_smoke = 0.1
-#         elif self.amount_of_smoke <= 0.05:
-#             self.amount_of_smoke = 0.05
-#         self.direction = Vec3(random.random(), random.random(), random.random()) * self.amount_of_smoke
-
-#     def update(self):
-#         self.position += self.direction * 120 * time.dt
-
-#         if self.amount_of_smoke >= 0.1:
-#             self.amount_of_smoke = 0.1
-#         elif self.amount_of_smoke <= 0.05:
-#             self.amount_of_smoke = 0.05
