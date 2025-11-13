@@ -28,8 +28,7 @@ Dự án này là một hệ thống game giải trí tích hợp AI, cho phép 
 - 🎨 **Giao diện launcher hiện đại** với PyQt6 và gradient đẹp mắt
 - 🏆 **Hệ thống điểm cao** lưu trữ thành tích người chơi
 
-### 🎥 Demo Video
-> *[...]*
+
 
 ---
 
@@ -230,16 +229,6 @@ pip install git+https://github.com/pokepetter/ursina.git
 
 ### Bước 4: Cấu Hình API Key (Cho AI Chatbot)
 
-Mở file `ai_config.py` và thay thế API key của bạn:
-
-```python
-GOOGLE_API_KEYS = [
-    "YOUR_GOOGLE_API_KEY_HERE",      # API chính
-    "YOUR_BACKUP_API_KEY_HERE"       # API dự phòng (tùy chọn)
-]
-```
-
-> 💡 **Lấy API Key**: Truy cập [Google AI Studio](https://makersuite.google.com/app/apikey) để tạo API key miễn phí.
 
 ### Bước 5: Kiểm Tra Camera
 
@@ -518,9 +507,6 @@ python main.py
 │  │[🎮 CHƠI]│  │[🎮 CHƠI]│  │[🎮 CHƠI]│ │
 │  └─────────┘  └─────────┘  └─────────┘ │
 └─────────────────────────────────────────┘
-```
-
-> 💡 *Thêm screenshots thực tế vào thư mục `/screenshots` nếu có*
 
 ---
 
@@ -556,16 +542,6 @@ class GameSettings:
     max_lives = 3           # Mạng tối đa
     slice_points = 10       # Điểm mỗi quả
     combo_window = 1.0      # Thời gian combo (giây)
-```
-
-### Thay Đổi API Key
-
-File `ai_config.py`:
-```python
-GOOGLE_API_KEYS = [
-    "YOUR_PRIMARY_KEY",
-    "YOUR_BACKUP_KEY"
-]
 ```
 
 ---
@@ -720,21 +696,7 @@ Cảm ơn các thư viện mã nguồn mở:
 
 
 
----
 
-## 📞 Liên Hệ & Hỗ Trợ
-
-### Liên Hệ
-- **Email**: [your-email@example.com]
-- **GitHub**: [https://github.com/your-username]
-- **Facebook**: [Link Facebook Group]
-
-### Hỗ Trợ
-- 📖 Đọc [Wiki](https://github.com/your-username/BTL_PYTHON/wiki)
-- 💬 Tham gia [Discord](https://discord.gg/your-server)
-- 🐛 Báo lỗi qua [Issues](https://github.com/your-username/BTL_PYTHON/issues)
-
----
 
 ## 🌟 Lời Cảm Ơn
 
