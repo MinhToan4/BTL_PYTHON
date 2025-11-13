@@ -8,8 +8,8 @@ import google.generativeai as genai
 
 # ================= CẤU HÌNH API =================
 GOOGLE_API_KEYS = [
-    "AIzaSyCXDp5b6PTSMhbA3SN_P4n_nQugn3qedMI",  # API chính
-    "AIzaSyDr-hjAbHHlo3MyzbUWkVQJGob4b_itPIA"   # API dự phòng
+    "GOOGLE_API_KEY_1",  # API chính
+    "GOOGLE_API_KEY_2"   # API dự phòng
 ]
 
 # Chỉ số API key hiện tại (0 = chính, 1 = dự phòng)
