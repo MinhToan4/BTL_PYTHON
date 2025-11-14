@@ -65,14 +65,22 @@ class Multiplayer(Entity):
                     self.players_target_name[variable_name] = "Guest"
                     self.players_target_score[variable_name] = 0.0
                     self.players_target_cos[variable_name] = "none"
+                    
                     # Tạo CarRepresentation cho người chơi
                     self.players[variable_name] = CarRepresentation(self.car, (-80, -30, 15), (0, 90, 0))
                     self.players[variable_name].text_object = CarUsername(self.players[variable_name])
+                    
+                    # Đảm bảo xe được hiển thị
+                    self.players[variable_name].visible = True
+                    self.players[variable_name].enabled = True
+                    
+                    print(f"Tạo người chơi mới: {variable_name}, ID: {variable.content['id']}")
 
-                    # Nếu là chính mình, ẩn và đổi màu
+                    # Nếu là chính mình, ẩn xe (chỉ ẩn xe, không ẩn text)
                     if self.selfId == int(variable.content["id"]):
                         self.players[variable_name].color = color.red
                         self.players[variable_name].visible = False
+                        print(f"Ẩn xe của chính mình: {variable_name}")
 
             @self.easy.event
             def onReplicatedVariableUpdated(variable):
@@ -111,9 +119,13 @@ class Multiplayer(Entity):
             # Nội suy vị trí và rotation mượt mà
             self.players[p].position += (Vec3(self.players_target_pos[p]) - self.players[p].position) / 25
             self.players[p].rotation += (Vec3(self.players_target_rot[p]) - self.players[p].rotation) / 25
-            # Cập nhật model và texture
-            self.players[p].model = f"{self.players_target_model[p]}"
-            self.players[p].texture = f"{self.players_target_tex[p]}"
+            
+            # Chỉ cập nhật model và texture khi có thay đổi
+            if self.players_target_model[p] != self.players[p].model or self.players_target_tex[p] != self.players[p].texture:
+                self.players[p].model = f"{self.players_target_model[p]}"
+                self.players[p].texture = f"{self.players_target_tex[p]}"
+                print(f"Cập nhật model/texture cho {p}: {self.players_target_model[p]}, {self.players_target_tex[p]}")
+            
             # Cập nhật tên và điểm số
             self.players[p].text_object.text = f"{self.players_target_name[p]}"
             self.players[p].highscore = f"{self.players_target_score[p]}"
