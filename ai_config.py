@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Cấu hình AI Chatbot cho Kho Game GestureAI
-Chứa API key, model config và system prompt
-"""
-
 import google.generativeai as genai
 
 # ================= CẤU HÌNH API =================
