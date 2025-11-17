@@ -1,5 +1,7 @@
 """
-achievements.py định nghĩa hệ thống thành tựu cho game Race Master 3D, sử dụng thư viện UrsinaAchievements.
+Tổng quan về file achievements.py:
+
+File achievements.py định nghĩa hệ thống thành tựu cho game Race Master 3D, sử dụng thư viện UrsinaAchievements.
 Nó tạo ra các thành tựu dựa trên hành động của người chơi như hoàn thành đường đua, mở khóa xe mới, đạt thời gian nhanh, v.v.
 Cấu trúc chính bao gồm: class Race Master 3D Achievements chính và các class con cho từng track (SandTrackAchievements, GrassTrackAchievements, etc.).
 Mỗi thành tựu có điều kiện kiểm tra và khi đạt được sẽ hiển thị thông báo và âm thanh.

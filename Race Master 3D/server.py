@@ -1,11 +1,8 @@
 """
-Module quản lý server multiplayer cho game Race Master 3D.
+Tổng quan về file server.py:
 
-Sử dụng UrsinaNetworking để tạo server và đồng bộ hóa dữ liệu giữa các client:
-- Vị trí và rotation xe
-- Loại xe và màu sắc
-- Username và highscore
-- Cosmetics (phụ kiện)
+File server.py định nghĩa class Server để tạo và quản lý server multiplayer cho game Race Master 3D.
+Sử dụng UrsinaNetworking để handle kết nối client, đồng bộ hóa dữ liệu người chơi.
 """
 
 from ursinanetworking import *
@@ -13,29 +10,22 @@ from ursinanetworking import *
 print("\nHello from the Race Master 3D Server!\n")
 
 class Server:
-    """Quản lý server multiplayer và đồng bộ hóa dữ liệu giữa các client."""
-    
+    """
+    Class Server quản lý server multiplayer.
+    Tạo server, handle client connections, và đồng bộ hóa dữ liệu.
+    """
     def __init__(self, ip, port):
-        """
-        Khởi tạo server configuration.
-        
-        Args:
-            ip: Input field chứa IP address
-            port: Input field chứa port number
-        """
-        self.ip = ip
-        self.port = port
-        self.start_server = False
-        self.server_update = False
+        self.ip = ip  # Input field cho IP
+        self.port = port  # Input field cho PORT
+        self.start_server = False  # Cờ để bắt đầu server
+        self.server_update = False  # Cờ cập nhật server
 
     def update_server(self):
         """
-        Khởi động server và đăng ký các event handlers.
-        
-        Được gọi khi start_server = True. Tạo replicated variables cho mỗi client
-        và handle các sự kiện kết nối/ngắt kết nối/cập nhật dữ liệu.
+        Khởi tạo và cập nhật server khi start_server = True.
         """
         if self.start_server:
+            # Tạo server với IP và PORT
             self.server = UrsinaNetworkingServer(self.ip.text, int(self.port.text))
             self.easy = EasyUrsinaNetworkingServer(self.server)
             
@@ -43,8 +33,7 @@ class Server:
             def onClientConnected(client):
                 """
                 Event khi client kết nối.
-                
-                Tạo replicated variable với dữ liệu mặc định cho player mới.
+                Tạo replicated variable cho player mới.
                 """
                 self.easy.create_replicated_variable(
                     f"player_{client.id}",
@@ -55,42 +44,59 @@ class Server:
 
             @self.server.event
             def onClientDisconnected(client):
-                """Event khi client ngắt kết nối - xóa replicated variable."""
+                """
+                Event khi client ngắt kết nối.
+                Xóa replicated variable của player.
+                """
                 self.easy.remove_replicated_variable_by_name(f"player_{client.id}")
                 
             @self.server.event
             def MyPosition(client, newpos):
-                """Cập nhật vị trí xe của client."""
+                """
+                Cập nhật vị trí player.
+                """
                 self.easy.update_replicated_variable_by_name(f"player_{client.id}", "position", newpos)
 
             @self.server.event
             def MyRotation(client, newrot):
-                """Cập nhật rotation xe của client."""
+                """
+                Cập nhật rotation player.
+                """
                 self.easy.update_replicated_variable_by_name(f"player_{client.id}", "rotation", newrot)
 
             @self.server.event
             def MyModel(client, newmodel):
-                """Cập nhật loại xe của client."""
+                """
+                Cập nhật model xe player.
+                """
                 self.easy.update_replicated_variable_by_name(f"player_{client.id}", "model", newmodel)
 
             @self.server.event
             def MyTexture(client, newtex):
-                """Cập nhật màu xe của client."""
+                """
+                Cập nhật texture xe player.
+                """
                 self.easy.update_replicated_variable_by_name(f"player_{client.id}", "texture", newtex)
 
             @self.server.event
             def MyUsername(client, newuser):
-                """Cập nhật tên người chơi của client."""
+                """
+                Cập nhật username player.
+                """
                 self.easy.update_replicated_variable_by_name(f"player_{client.id}", "username", newuser)
         
             @self.server.event
             def MyHighscore(client, newscore):
-                """Cập nhật điểm cao nhất của client."""
+                """
+                Cập nhật highscore player.
+                """
                 self.easy.update_replicated_variable_by_name(f"player_{client.id}", "highscore", newscore)
 
             @self.server.event
             def MyCosmetic(client, newcos):
-                """Cập nhật phụ kiện xe của client."""
+                """
+                Cập nhật cosmetic player.
+                """
                 self.easy.update_replicated_variable_by_name(f"player_{client.id}", "cosmetic", newcos)
 
             self.server_update = True
