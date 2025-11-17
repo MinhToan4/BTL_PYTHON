@@ -1,12 +1,9 @@
-# Hệ thống AI cho xe đối thủ trong game Race Master 3D
-# File này tạo ra các xe AI thông minh có thể tự lái trên đường đua
-# AI sẽ theo dõi các điểm path được định sẵn và tránh vật cản
-
 """
-Lý do raycast bị gạch chân đỏ là vì PyCharm (hoặc IDE khác) không nhận diện được hàm raycast từ thư viện Ursina.
-Ursina là một wrapper cho Panda3D, và raycast là hàm được định nghĩa động hoặc không có type hints đầy đủ, nên IDE không thể resolve reference.
-Tôi đã thêm comment # type: ignore vào cả hai chỗ gọi raycast (trong __init__ và update).
-Điều này sẽ bỏ qua lỗi unresolved reference cho IDE, nhưng code vẫn chạy bình thường vì raycast là hàm hợp lệ trong Ursina.
+Module quản lý xe AI (đối thủ) trong game Race Master 3D.
+
+AI xe tự động lái theo các điểm path được định sẵn trên mỗi đường đua,
+tránh vật cản, và điều chỉnh tốc độ dựa trên địa hình. Hỗ trợ nhiều loại
+xe khác nhau với thuộc tính vật lý riêng.
 """
 
 from ursina import *
@@ -19,10 +16,22 @@ sign = lambda x: -1 if x < 0 else (1 if x > 0 else 0)
 
 class AICar(Entity):
     """
-    Lớp xe AI - đối thủ trong game
-    Xe AI có thể tự lái, tránh vật cản và theo đường đua
+    Xe AI tự động điều khiển, đua với người chơi.
+    
+    AI sử dụng pathfinding đơn giản: theo dõi các điểm path và xoay
+    về phía điểm tiếp theo. Có khả năng tránh vật cản và điều chỉnh
+    tốc độ khi vào cua.
     """
+    
     def __init__(self, car, ai_list, sand_track, grass_track, snow_track, forest_track, savannah_track, lake_track):
+        """
+        Khởi tạo xe AI.
+        
+        Args:
+            car: Xe người chơi (để tham chiếu)
+            ai_list: Danh sách tất cả AI cars
+            *_track: Các đường đua trong game
+        """
         super().__init__(
             model = "sports-car.obj",
             texture = "sports-red.png",

@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Kho Game Điều Khiển Bằng Cử Chỉ Tay Với MediaPipe
-Giao diện menu chính sử dụng PyQt6
-"""
-
 import sys
 import os
 import subprocess
