@@ -1,11 +1,3 @@
-"""
-Tổng quan về file main.py:
-
-File main.py là file chính của game Race Master 3D, sử dụng framework Ursina để tạo game đua xe 3D.
-Nó chịu trách nhiệm khởi tạo toàn bộ ứng dụng, tải assets, tạo các đối tượng game chính như xe, đường đua, AI, menu, và xử lý vòng lặp game.
-Cấu trúc chính bao gồm: import các module, cấu hình Ursina, tải assets, khởi tạo đối tượng, và các hàm update/input.
-"""
-
 # ==================== IMPORTS VÀ CẤU HÌNH BAN ĐẦU ====================
 # Import thư viện Ursina - framework 3D game chính
 import render
